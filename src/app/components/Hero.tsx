@@ -42,7 +42,7 @@ const Hero = () => {
         </h1>
         <p className="text-xl md:text-2xl mb-8">
           Kuje Health-care Services, provide trusted, compassionate care for
-          <br /> healthier lives and stronger communities."
+          <br /> healthier lives and stronger communities.
         </p>
         {/* Action Buttons */}
         <div className="flex justify-center gap-6">
@@ -54,7 +54,7 @@ const Hero = () => {
           </Link>
           <Link
             href="/"
-            className="inline-block border-2 border-blue-500 text-white-500 py-3 px-6 bg-white/10 backdrop-blur-md rounded-lg hover:shadow-lg  transition-all"
+            className="inline-block border-2 border-blue-500 text-white py-3 px-6 bg-white/10 backdrop-blur-md rounded-lg hover:shadow-lg  transition-all"
           >
             Meet a Doctor
           </Link>

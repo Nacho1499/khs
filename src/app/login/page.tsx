@@ -11,9 +11,11 @@ const Page = () => {
   const router = useRouter();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
 
   const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoading(true);
     try {
       await signInWithEmailAndPassword(auth, email, password);
       toast.success("Login successful!");
@@ -21,7 +23,9 @@ const Page = () => {
         router.push("/dashboard");
       }, 1000);
     } catch (error) {
-      toast.error("Create an account!");
+      toast.error("Invalid email or password. Please try again.s");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -49,7 +53,12 @@ const Page = () => {
           />
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
+            disabled={loading}
+            className={`w-full py-2 rounded transition ${
+              loading
+                ? "bg-blue-400 cursor-not-allowed"
+                : "bg-blue-600 hover:bg-blue-700 text-white"
+            }`}
           >
             Log In
           </button>
