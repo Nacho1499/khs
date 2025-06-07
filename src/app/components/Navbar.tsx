@@ -25,6 +25,7 @@ export const Navbar = () => {
           <Link href="/about" className="hover:text-blue-400">
             About
           </Link>
+         
         </div>
 
         {/* Mobile Hamburger Menu */}
@@ -69,6 +70,7 @@ export const Navbar = () => {
         >
           About
         </Link>
+       
       </div>
     </nav>
   );

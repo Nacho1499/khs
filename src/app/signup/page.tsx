@@ -7,7 +7,7 @@ import { toast } from "sonner";
 
 import { useState, FormEvent } from "react";
 
-const page = () => {
+const Page = () => {
   const router = useRouter();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -20,7 +20,7 @@ const page = () => {
       setTimeout(() => {
         router.push("/login");
       }, 1000);
-    } catch (err: any) {
+    } catch (error) {
       toast.error("Signup failed ");
     }
   };
@@ -67,4 +67,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;
