@@ -1,7 +1,7 @@
-
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { Toaster } from 'sonner';
+import { Toaster } from "sonner";
+import { Navbar } from "./components/Navbar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -13,8 +13,6 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -25,7 +23,8 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-         <Toaster richColors position="top-center" />
+        <Toaster richColors position="top-center" />
+        <Navbar />
         {children}
       </body>
     </html>
