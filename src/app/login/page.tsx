@@ -22,7 +22,8 @@ const Page = () => {
       setTimeout(() => {
         router.push("/dashboard");
       }, 1000);
-    } catch (error) {
+    } catch{
+      
       toast.error("Invalid email or password. Please try again.s");
     } finally {
       setLoading(false);

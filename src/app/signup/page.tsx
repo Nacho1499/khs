@@ -20,7 +20,8 @@ const Page = () => {
       setTimeout(() => {
         router.push("/login");
       }, 1000);
-    } catch (error) {
+    } catch{
+      
       toast.error("Signup failed ");
     }
   };
