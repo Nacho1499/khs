@@ -1,6 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth } from "../../../lib/firebase";
 import Link from "next/link";
 import { toast } from "sonner";
@@ -11,17 +11,24 @@ const Page = () => {
   const router = useRouter();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [username, setUsername] = useState<string>("");
 
   const handleSignup = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const user = userCredential.user;
+
+      await updateProfile(user, { displayName: username });
       toast.success("Account created successfully!");
       setTimeout(() => {
         router.push("/login");
       }, 1000);
-    } catch{
-      
+    } catch {
       toast.error("Signup failed ");
     }
   };
@@ -33,6 +40,14 @@ const Page = () => {
         </h1>
         <p className="text-center mb-6">create an accout to login</p>
         <form onSubmit={handleSignup} className="space-y-4 ">
+           <input
+            type="text"
+            placeholder="Enter username"
+            value={username}
+            required
+            onChange={(e) => setUsername(e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
           <input
             type="email"
             placeholder="Email"

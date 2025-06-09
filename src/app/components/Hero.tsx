@@ -38,10 +38,10 @@ const Hero = () => {
       {/* Hero Text Content */}
       <div className="absolute inset-0 flex flex-col justify-center items-center text-center text-white z-20 px-6 md:px-12">
         <h1 className="text-4xl md:text-6xl font-bold mb-4">
-          Kuje Health-care <span className="text-blue-400">Services</span>
+          Kuje Health-care <span className="text-blue-400">Service</span>
         </h1>
         <p className="text-xl md:text-2xl mb-8">
-          Kuje Health-care Services, provide trusted, compassionate care for
+          Kuje Health-care Service provide trusted and compassionate online care for
           <br /> healthier lives and stronger communities.
         </p>
         {/* Action Buttons */}

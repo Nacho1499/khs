@@ -2,7 +2,7 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, User, LogOut, X } from "lucide-react";
-import { signOut } from "firebase/auth";
+import { signOut, onAuthStateChanged, User as FirebaseUser } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { auth } from "../../../lib/firebase";
 import Link from "next/link";
@@ -15,26 +15,10 @@ interface top {
 }
 
 const hospital: top[] = [
-  {
-    id: 1,
-    name: "City Hospital",
-    Image: "/hospital1.jpg",
-  },
-  {
-    id: 2,
-    name: "City Hospital",
-    Image: "/hospital2.jpg",
-  },
-  {
-    id: 3,
-    name: "City Hospital",
-    Image: "/hospital3.jpg",
-  },
-  {
-    id: 4,
-    name: "City Hospital",
-    Image: "/hospital4.jpg",
-  },
+  { id: 1, name: "City Hospital", Image: "/hospital1.jpg" },
+  { id: 2, name: "City Hospital", Image: "/hospital2.jpg" },
+  { id: 3, name: "City Hospital", Image: "/hospital3.jpg" },
+  { id: 4, name: "City Hospital", Image: "/hospital4.jpg" },
 ];
 
 interface SidebarLink {
@@ -43,13 +27,29 @@ interface SidebarLink {
 }
 
 const sidebarLinks: SidebarLink[] = [
-  { name: "Home", href: "#" },
+  { name: "Home", href: "/" },
   { name: "Hospitals", href: "#" },
   { name: "Doctors", href: "#" },
 ];
 
-export default function Page() {
+const Page = () => {
   const router = useRouter();
+
+  // Auth state and loading state
+  const [user, setUser] = useState<FirebaseUser | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+      if (!firebaseUser) {
+        router.replace("/login"); // Redirect if not logged in
+      } else {
+        setUser(firebaseUser);
+      }
+      setLoading(false);
+    });
+    return () => unsubscribe();
+  }, [router]);
 
   const handleLogout = async () => {
     try {
@@ -62,7 +62,7 @@ export default function Page() {
   };
 
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
-  const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
+  const [dropdownOpen, setDropdownOpen] = useState <boolean>(false);
   const [activeLink, setActiveLink] = useState<string>("Home");
   const [isDesktop, setIsDesktop] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -84,10 +84,7 @@ export default function Page() {
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setDropdownOpen(false);
       }
     }
@@ -114,6 +111,20 @@ export default function Page() {
 
   const sidebarVisible = isDesktop || sidebarOpen;
 
+  // While checking auth, show loading UI
+  if (loading) {
+    return (
+      <div className="h-screen flex items-center justify-center text-lg">
+        Loading...
+      </div>
+    );
+  }
+
+  // If no user (should redirect already), render nothing to avoid flicker
+  if (!user) {
+    return null;
+  }
+
   return (
     <div className="flex h-screen bg-gray-100 overflow-hidden">
       <AnimatePresence>
@@ -135,9 +146,7 @@ export default function Page() {
         transition={{ type: "spring", stiffness: 250, damping: 30 }}
         className="fixed top-0 left-0 z-20 w-64 bg-white shadow-md h-screen p-6 flex flex-col overflow-y-auto md:relative"
       >
-        <div className="text-2xl font-extrabold mb-8 text-blue-700">
-          Kuje Health-care
-        </div>
+        <div className="text-2xl font-extrabold mb-8 text-blue-700">Kuje Health-care</div>
         <nav className="flex flex-col space-y-3 flex-1">
           {sidebarLinks.map(({ name, href }) => (
             <a
@@ -157,9 +166,7 @@ export default function Page() {
             </a>
           ))}
         </nav>
-        <div className="text-xs text-gray-400 mt-auto">
-          © 2025. All Rights Reserved
-        </div>
+        <div className="text-xs text-gray-400 mt-auto">© 2025. All Rights Reserved</div>
       </motion.aside>
 
       <div className="flex-1 flex flex-col ml-0 md:ml-20 overflow-y-auto">
@@ -171,13 +178,16 @@ export default function Page() {
           >
             {sidebarOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
+
           <div className="relative" ref={dropdownRef}>
             <button
               onClick={() => setDropdownOpen(!dropdownOpen)}
               className="flex items-center space-x-2 p-2 rounded-md hover:bg-gray-200"
             >
               <User className="h-6 w-6 text-gray-700" />
-              <span className="font-medium text-gray-700">Profile</span>
+              <span className="font-medium text-gray-700">
+                {user?.displayName || "Profile"}
+              </span>
             </button>
             <AnimatePresence>
               {dropdownOpen && (
@@ -186,8 +196,13 @@ export default function Page() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
                   transition={{ duration: 0.2 }}
-                  className="absolute right-0 mt-2 w-44 bg-white shadow-lg rounded-md z-40"
+                  className="absolute right-6 mt-3 w-52 bg-white shadow-lg rounded-md z-40 sm:left-5 mt-3"
                 >
+                  {user?.email && (
+                    <div className="px-4 py-2 text-sm text-gray-500 border-b">
+                      {user.email}
+                    </div>
+                  )}
                   <button
                     className="flex items-center w-full px-4 py-2 text-gray-700 hover:bg-gray-100"
                     onClick={handleLogout}
@@ -220,9 +235,7 @@ export default function Page() {
                     alt={page.name}
                   />
                   <div className="p-5">
-                    <h3 className="text-xl font-semibold text-gray-800">
-                      {page.name}
-                    </h3>
+                    <h3 className="text-xl font-semibold text-gray-800">{page.name}</h3>
                     <Link href="/details">
                       <button className="bg-blue-700 w-[100px] p-2 mt-4 rounded text-white shadow-md cursor-pointer">
                         See More
@@ -237,4 +250,6 @@ export default function Page() {
       </div>
     </div>
   );
-}
+};
+
+export default Page;
