@@ -2,7 +2,11 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, User, LogOut, X } from "lucide-react";
-import { signOut, onAuthStateChanged, User as FirebaseUser } from "firebase/auth";
+import {
+  signOut,
+  onAuthStateChanged,
+  User as FirebaseUser,
+} from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { auth } from "../../../lib/firebase";
 import Link from "next/link";
@@ -15,10 +19,9 @@ interface top {
 }
 
 const hospital: top[] = [
-  { id: 1, name: "Asokoro Hospital", Image: "/hospital1.jpg" },
-  { id: 2, name: "City Hospital", Image: "/hospital2.jpg" },
-  { id: 3, name: "Cadarcrest Hospital", Image: "/hospital3.jpg" },
-  { id: 4, name: "National Hospital Abuja", Image: "/hospital4.jpg" },
+  { id: 1, name: "Consultant Okeke Chibuogu", Image: "/doc1.jpg" },
+  { id: 2, name: "Doctor Adeyemi Ojo", Image: "/doc2.jpg" },
+  { id: 3, name: "Doctor Rose Okafor", Image: "/doc4.jpg" },
 ];
 
 interface SidebarLink {
@@ -28,20 +31,17 @@ interface SidebarLink {
 
 const sidebarLinks: SidebarLink[] = [
   { name: "Home", href: "/dashboard" },
-  { name: "Visit Hospital", href: "/hospitals" },
-  { name: "Meet a Doctor", href: "/doctors" },
-  { name: "User Room", href: "/user" },
+  { name: "Hospitals", href: "/hospitals" },
 ];
 
 const Page = () => {
   useEffect(() => {
-  document.documentElement.classList.remove("dark");
-}, []);
+    document.documentElement.classList.remove("dark");
+  }, []);
   const router = useRouter();
 
   // Auth state and loading state
   const [user, setUser] = useState<FirebaseUser | null>(null);
-  
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
@@ -50,7 +50,6 @@ const Page = () => {
       } else {
         setUser(firebaseUser);
       }
-    
     });
     return () => unsubscribe();
   }, [router]);
@@ -66,7 +65,7 @@ const Page = () => {
   };
 
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
-  const [dropdownOpen, setDropdownOpen] = useState <boolean>(false);
+  const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
   const [activeLink, setActiveLink] = useState<string>("Home");
   const [isDesktop, setIsDesktop] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -88,7 +87,10 @@ const Page = () => {
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setDropdownOpen(false);
       }
     }
@@ -114,9 +116,6 @@ const Page = () => {
   }, []);
 
   const sidebarVisible = isDesktop || sidebarOpen;
-
-  // While checking auth, show loading UI
- 
 
   // If no user (should redirect already), render nothing to avoid flicker
   if (!user) {
@@ -164,7 +163,9 @@ const Page = () => {
             </a>
           ))}
         </nav>
-        <div className="text-xs text-gray-400 mt-auto">© 2025. All Rights Reserved</div>
+        <div className="text-xs text-gray-400 mt-auto">
+          © 2025. All Rights Reserved
+        </div>
       </motion.aside>
 
       <div className="flex-1 flex flex-col ml-0 md:ml-20 overflow-y-auto">
@@ -217,7 +218,7 @@ const Page = () => {
         <section className="bg-white dark:bg-gray-900 py-16 px-6 mt-5">
           <div className="max-w-7xl mx-auto">
             <h2 className="text-2xl font-bold text-blue-700 mb-10 md:text-3xl">
-              Top Rated Hospitals
+              Avialable Doctors
             </h2>
             <div className="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
               {hospital.map((page) => (
@@ -233,9 +234,11 @@ const Page = () => {
                     alt={page.name}
                   />
                   <div className="p-5">
-                    <h3 className="text-xl font-semibold text-gray-800 mb-4">{page.name}</h3>
+                    <h3 className="text-xl font-semibold text-gray-800 mb-4">
+                      {page.name}
+                    </h3>
                     <Link href="/details" className="text-blue-700">
-                      Details page →
+                      Profile page →
                     </Link>
                   </div>
                 </div>

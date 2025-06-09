@@ -18,13 +18,12 @@ const Page = () => {
     setLoading(true);
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      toast.success("Login successful!");
+      toast.success("Login successful");
       setTimeout(() => {
         router.push("/dashboard");
       }, 1000);
-    } catch{
-      
-      toast.error("Invalid email or password. Please try again.s");
+    } catch {
+      toast.error("Invalid email or password. Please try again");
     } finally {
       setLoading(false);
     }
