@@ -1,7 +1,7 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "sonner";
-import { Navbar } from "./components/Navbar";
+
 import Loading from "./components/loading";
 
 
@@ -27,7 +27,7 @@ export default function RootLayout({
       >
         
        <Loading/>
-        <Navbar />
+       
         {children}
         <Toaster richColors position="top-center" />
       </body>

@@ -7,7 +7,7 @@ const Loading = () => {
   useEffect(() => {
     setTimeout(() => {
       setIsLoading(false);
-    }, 4000);
+    }, 2000);
   }, []);
 
   if (!isLoading) {
