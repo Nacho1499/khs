@@ -6,10 +6,11 @@ import { signOut } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { auth } from "../../../lib/firebase";
 import Link from "next/link";
+import Image from "next/image";
 
 interface top {
   id: number;
-  img: string;
+  Image: string;
   name: string;
 }
 
@@ -17,22 +18,22 @@ const hospital: top[] = [
   {
     id: 1,
     name: "City Hospital",
-    img: "/hospital1.jpg",
+    Image: "/hospital1.jpg",
   },
   {
     id: 2,
     name: "City Hospital",
-    img: "/hospital2.jpg",
+    Image: "/hospital2.jpg",
   },
   {
     id: 3,
     name: "City Hospital",
-    img: "/hospital3.jpg",
+    Image: "/hospital3.jpg",
   },
   {
     id: 4,
     name: "City Hospital",
-    img: "/hospital4.jpg",
+    Image: "/hospital4.jpg",
   },
 ];
 interface SidebarLink {
@@ -46,7 +47,7 @@ const sidebarLinks: SidebarLink[] = [
   { name: "Doctors", href: "#" },
 ];
 
-const page = () => {
+const Page = () => {
   const router = useRouter();
 
   const handleLogout = async () => {
@@ -218,7 +219,7 @@ const page = () => {
                   key={page.id}
                   className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition"
                 >
-                  <img src={page.img} className="w-full h-52 object-cover" />
+                  <Image src={page.Image} className="w-full h-52 object-cover" width={300} height={100} alt={page.Image}/>
                   <div className="p-5">
                     <h3 className="text-xl font-semibold text-gray-800">
                       {page.name}
@@ -239,4 +240,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;
