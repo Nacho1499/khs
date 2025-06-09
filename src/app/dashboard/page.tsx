@@ -36,6 +36,7 @@ const hospital: top[] = [
     Image: "/hospital4.jpg",
   },
 ];
+
 interface SidebarLink {
   name: string;
   href: string;
@@ -47,7 +48,7 @@ const sidebarLinks: SidebarLink[] = [
   { name: "Doctors", href: "#" },
 ];
 
-const Page = () => {
+export default function Page() {
   const router = useRouter();
 
   const handleLogout = async () => {
@@ -66,7 +67,6 @@ const Page = () => {
   const [isDesktop, setIsDesktop] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Track screen size for desktop vs mobile
   useEffect(() => {
     function handleResize() {
       setIsDesktop(window.innerWidth >= 768);
@@ -76,14 +76,12 @@ const Page = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Close sidebar automatically on desktop resize
   useEffect(() => {
     if (isDesktop) {
       setSidebarOpen(false);
     }
   }, [isDesktop]);
 
-  // Close dropdown if click outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (
@@ -103,7 +101,6 @@ const Page = () => {
     };
   }, [dropdownOpen]);
 
-  // Close sidebar and dropdown on Escape key
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
       if (e.key === "Escape") {
@@ -116,9 +113,9 @@ const Page = () => {
   }, []);
 
   const sidebarVisible = isDesktop || sidebarOpen;
+
   return (
     <div className="flex h-screen bg-gray-100 overflow-hidden">
-      {/* Overlay on mobile */}
       <AnimatePresence>
         {sidebarOpen && !isDesktop && (
           <motion.div
@@ -132,12 +129,11 @@ const Page = () => {
         )}
       </AnimatePresence>
 
-      {/* Sidebar */}
       <motion.aside
         initial={{ x: -280 }}
         animate={{ x: sidebarVisible ? 0 : -280 }}
         transition={{ type: "spring", stiffness: 250, damping: 30 }}
-        className="fixed top-0 left-0 z-20 w-64 bg-white  shadow-md h-screen p-6 flex flex-col overflow-y-auto md:relative"
+        className="fixed top-0 left-0 z-20 w-64 bg-white shadow-md h-screen p-6 flex flex-col overflow-y-auto md:relative"
       >
         <div className="text-2xl font-extrabold mb-8 text-blue-700">
           Kuje Health-care
@@ -166,9 +162,7 @@ const Page = () => {
         </div>
       </motion.aside>
 
-      {/* Content */}
       <div className="flex-1 flex flex-col ml-0 md:ml-20 overflow-y-auto">
-        {/* Navbar */}
         <header className="flex items-center justify-between bg-white shadow px-6 py-3 sticky top-0 z-30">
           <button
             className="md:hidden p-2 rounded-md hover:bg-gray-200"
@@ -207,7 +201,6 @@ const Page = () => {
           </div>
         </header>
 
-        {/* Page content */}
         <section className="bg-white dark:bg-gray-900 py-16 px-6 mt-5">
           <div className="max-w-7xl mx-auto">
             <h2 className="text-3xl font-bold text-blue-700 mb-10">
@@ -219,7 +212,13 @@ const Page = () => {
                   key={page.id}
                   className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition"
                 >
-                  <Image src={page.Image} className="w-full h-52 object-cover" width={300} height={100} alt={page.Image}/>
+                  <Image
+                    src={page.Image}
+                    className="w-full h-52 object-cover"
+                    width={300}
+                    height={100}
+                    alt={page.name}
+                  />
                   <div className="p-5">
                     <h3 className="text-xl font-semibold text-gray-800">
                       {page.name}
@@ -238,6 +237,4 @@ const Page = () => {
       </div>
     </div>
   );
-};
-
-export default Page;
+}
