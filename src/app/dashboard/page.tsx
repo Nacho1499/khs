@@ -1,14 +1,88 @@
-"use client"
-import React, { useState, useRef, useEffect } from "react";
-import Link from "next/link";
+"use client";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Menu, User, LogOut, X } from "lucide-react";
+import { signOut } from "firebase/auth";
+import { useRouter } from "next/navigation";
+import { auth } from "../../../lib/firebase";
+import Link from "next/link";
 
-const Page = () => {
-   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
+interface top {
+  id: number;
+  img: string;
+  name: string;
+}
+
+const hospital: top[] = [
+  {
+    id: 1,
+    name: "City Hospital",
+    img: "/hospital1.jpg",
+  },
+  {
+    id: 2,
+    name: "City Hospital",
+    img: "/hospital2.jpg",
+  },
+  {
+    id: 3,
+    name: "City Hospital",
+    img: "/hospital3.jpg",
+  },
+  {
+    id: 4,
+    name: "City Hospital",
+    img: "/hospital4.jpg",
+  },
+];
+interface SidebarLink {
+  name: string;
+  href: string;
+}
+
+const sidebarLinks: SidebarLink[] = [
+  { name: "Home", href: "#" },
+  { name: "Hospitals", href: "#" },
+  { name: "Doctors", href: "#" },
+];
+
+const page = () => {
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      router.push("/login");
+    } catch (error) {
+      console.error("Logout failed:", error);
+      alert("Failed to logout. Please try again.");
+    }
+  };
+
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
-  const [isLargeScreen, setIsLargeScreen] = useState<boolean>(false);
+  const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
+  const [activeLink, setActiveLink] = useState<string>("Home");
+  const [isDesktop, setIsDesktop] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
+  // Track screen size for desktop vs mobile
+  useEffect(() => {
+    function handleResize() {
+      setIsDesktop(window.innerWidth >= 768);
+    }
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // Close sidebar automatically on desktop resize
+  useEffect(() => {
+    if (isDesktop) {
+      setSidebarOpen(false);
+    }
+  }, [isDesktop]);
+
+  // Close dropdown if click outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (
@@ -18,216 +92,151 @@ const Page = () => {
         setDropdownOpen(false);
       }
     }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
-  useEffect(() => {
-    function handleResize() {
-      setIsLargeScreen(window.innerWidth >= 1024);
+    if (dropdownOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
     }
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [dropdownOpen]);
+
+  // Close sidebar and dropdown on Escape key
+  useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") {
+        setDropdownOpen(false);
+        setSidebarOpen(false);
+      }
+    }
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
-   useEffect(() => {
-    if (isLargeScreen) setSidebarOpen(false);
-  }, [isLargeScreen]);
 
+  const sidebarVisible = isDesktop || sidebarOpen;
   return (
-       <div className="min-h-screen bg-gray-50 flex flex-col">
-      {/* Navbar */}
-      <header className="bg-white shadow fixed top-0 left-0 right-0 z-30">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
-          {/* Left: Hamburger + Logo */}
-          <div className="flex items-center space-x-4">
-            {/* Toggle hamburger/close button */}
-            <button
-              onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="lg:hidden p-2 rounded-md text-gray-700 bg-white shadow-md z-50 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              aria-label={sidebarOpen ? "Close sidebar" : "Open sidebar"}
-            >
-              {sidebarOpen ? (
-                // Close (X) icon with black stroke for visibility
-                <svg
-                  className="w-6 h-6"
-                  fill="none"
-                  stroke="black"
-                  strokeWidth="2"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
-              ) : (
-                // Hamburger icon
-                <svg
-                  className="w-6 h-6"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M4 6h16M4 12h16M4 18h16"
-                  />
-                </svg>
-              )}
-            </button>
-            <h1 className="text-2xl font-semibold text-indigo-600 select-none">
-              MyDashboard
-            </h1>
-          </div>
+    <div className="flex h-screen bg-gray-100 overflow-hidden">
+      {/* Overlay on mobile */}
+      <AnimatePresence>
+        {sidebarOpen && !isDesktop && (
+          <motion.div
+            className="fixed inset-0 bg-black bg-opacity-40 z-10 md:hidden"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setSidebarOpen(false)}
+            aria-hidden="true"
+          />
+        )}
+      </AnimatePresence>
 
-          {/* Right: User Profile Dropdown */}
+      {/* Sidebar */}
+      <motion.aside
+        initial={{ x: -280 }}
+        animate={{ x: sidebarVisible ? 0 : -280 }}
+        transition={{ type: "spring", stiffness: 250, damping: 30 }}
+        className="fixed top-0 left-0 z-20 w-64 bg-white  shadow-md h-screen p-6 flex flex-col overflow-y-auto md:relative"
+      >
+        <div className="text-2xl font-extrabold mb-8 text-blue-700">
+          Kuje Health-care
+        </div>
+        <nav className="flex flex-col space-y-3 flex-1">
+          {sidebarLinks.map(({ name, href }) => (
+            <a
+              key={name}
+              href={href}
+              onClick={() => {
+                setActiveLink(name);
+                setSidebarOpen(false);
+              }}
+              className={`block px-4 py-2 rounded-md font-medium transition-colors ${
+                activeLink === name
+                  ? "bg-blue-600 text-white"
+                  : "text-gray-700 hover:bg-blue-100 hover:text-blue-700"
+              }`}
+            >
+              {name}
+            </a>
+          ))}
+        </nav>
+        <div className="text-xs text-gray-400 mt-auto">
+          © 2025. All Rights Reserved
+        </div>
+      </motion.aside>
+
+      {/* Content */}
+      <div className="flex-1 flex flex-col ml-0 md:ml-20 overflow-y-auto">
+        {/* Navbar */}
+        <header className="flex items-center justify-between bg-white shadow px-6 py-3 sticky top-0 z-30">
+          <button
+            className="md:hidden p-2 rounded-md hover:bg-gray-200"
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            aria-label={sidebarOpen ? "Close sidebar" : "Open sidebar"}
+          >
+            {sidebarOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
           <div className="relative" ref={dropdownRef}>
             <button
               onClick={() => setDropdownOpen(!dropdownOpen)}
-              className="flex items-center space-x-1 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 px-2 py-1 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium"
+              className="flex items-center space-x-2 p-2 rounded-md hover:bg-gray-200"
             >
-              <span className="sr-only">Open user menu</span>
-              <img
-                src="https://i.pravatar.cc/32"
-                alt="User Avatar"
-                className="w-6 h-6 rounded-full object-cover"
-              />
-              <span className="hidden sm:block">Jane Doe</span>
-              <svg
-                className={`w-4 h-4 transition-transform duration-200 ${
-                  dropdownOpen ? "rotate-180" : "rotate-0"
-                }`}
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                viewBox="0 0 24 24"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-              </svg>
+              <User className="h-6 w-6 text-gray-700" />
+              <span className="font-medium text-gray-700">Profile</span>
             </button>
-
             <AnimatePresence>
               {dropdownOpen && (
                 <motion.div
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.15 }}
-                  className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-40"
+                  transition={{ duration: 0.2 }}
+                  className="absolute right-0 mt-2 w-44 bg-white shadow-lg rounded-md z-40"
                 >
-                  <Link
-                    href="/profile"
-                    className="block px-4 py-2 text-gray-700 hover:bg-indigo-100 transition"
-                    onClick={() => setDropdownOpen(false)}
+                  <button
+                    className="flex items-center w-full px-4 py-2 text-gray-700 hover:bg-gray-100"
+                    onClick={handleLogout}
                   >
-                    Profile Settings
-                  </Link>
-                  <Link
-                    href="/logout"
-                    className="block px-4 py-2 text-gray-700 hover:bg-indigo-100 transition"
-                    onClick={() => setDropdownOpen(false)}
-                  >
+                    <LogOut className="w-5 h-5 mr-2" />
                     Logout
-                  </Link>
+                  </button>
                 </motion.div>
               )}
             </AnimatePresence>
           </div>
-        </div>
-      </header>
+        </header>
 
-      {/* Sidebar + Content */}
-      <div className="flex flex-1 pt-16">
-        {/* Sidebar */}
-        <AnimatePresence>
-          {(sidebarOpen || isLargeScreen) && (
-            <motion.aside
-              key="sidebar"
-              initial={{ x: -250, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              exit={{ x: -250, opacity: 0 }}
-              transition={{ duration: 0.3 }}
-              className="fixed inset-y-0 left-0 w-64 bg-white border-r border-gray-200 z-40 lg:static lg:translate-x-0 lg:flex-shrink-0"
-            >
-              <nav className="h-full flex flex-col p-6 space-y-2 text-gray-700">
-                <Link
-                  href="/overview"
-                  className="rounded-md px-4 py-2 hover:bg-indigo-100 hover:text-indigo-700 transition font-medium"
-                  onClick={() => setSidebarOpen(false)}
+        {/* Page content */}
+        <section className="bg-white dark:bg-gray-900 py-16 px-6 mt-5">
+          <div className="max-w-7xl mx-auto">
+            <h2 className="text-3xl font-bold text-blue-700 mb-10">
+              Top Hospitals
+            </h2>
+            <div className="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+              {hospital.map((page) => (
+                <div
+                  key={page.id}
+                  className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition"
                 >
-                  Overview
-                </Link>
-                <Link
-                  href="/reports"
-                  className="rounded-md px-4 py-2 hover:bg-indigo-100 hover:text-indigo-700 transition font-medium"
-                  onClick={() => setSidebarOpen(false)}
-                >
-                  Reports
-                </Link>
-                <Link
-                  href="/settings"
-                  className="rounded-md px-4 py-2 hover:bg-indigo-100 hover:text-indigo-700 transition font-medium"
-                  onClick={() => setSidebarOpen(false)}
-                >
-                  Settings
-                </Link>
-              </nav>
-            </motion.aside>
-          )}
-        </AnimatePresence>
-
-        {/* Overlay for mobile sidebar */}
-        {sidebarOpen && (
-          <div
-            className="fixed inset-0 bg-black bg-opacity-30 z-30 lg:hidden"
-            onClick={() => setSidebarOpen(false)}
-            aria-hidden="true"
-          />
-        )}
-
-        {/* Main Content */}
-        <main className="flex-1 bg-gray-100 p-6 lg:ml-64 container mx-auto">
-          <h2 className="text-3xl font-bold text-gray-900 mb-6">Dashboard</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div className="bg-white rounded-lg shadow p-6">
-              <h3 className="text-xl font-semibold mb-2">Total Users</h3>
-              <p className="text-indigo-600 text-3xl font-bold">1,234</p>
-            </div>
-            <div className="bg-white rounded-lg shadow p-6">
-              <h3 className="text-xl font-semibold mb-2">Sales</h3>
-              <p className="text-indigo-600 text-3xl font-bold">$56,789</p>
-            </div>
-            <div className="bg-white rounded-lg shadow p-6">
-              <h3 className="text-xl font-semibold mb-2">Active Sessions</h3>
-              <p className="text-indigo-600 text-3xl font-bold">345</p>
+                  <img src={page.img} className="w-full h-52 object-cover" />
+                  <div className="p-5">
+                    <h3 className="text-xl font-semibold text-gray-800">
+                      {page.name}
+                    </h3>
+                    <Link href="/details">
+                      <button className="bg-blue-700 w-[100px] p-2 mt-4 rounded text-white shadow-md cursor-pointer">
+                        See More
+                      </button>
+                    </Link>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
-
-          <section className="mt-10 bg-white rounded-lg shadow p-6">
-            <h3 className="text-xl font-semibold mb-4">Recent Activity</h3>
-            <ul className="divide-y divide-gray-200 text-gray-700">
-              <li className="py-3 flex justify-between">
-                <span>User John Doe signed up</span>
-                <time className="text-gray-400 text-sm">2 hours ago</time>
-              </li>
-              <li className="py-3 flex justify-between">
-                <span>New order received (#1234)</span>
-                <time className="text-gray-400 text-sm">5 hours ago</time>
-              </li>
-              <li className="py-3 flex justify-between">
-                <span>System update completed</span>
-                <time className="text-gray-400 text-sm">1 day ago</time>
-              </li>
-            </ul>
-          </section>
-        </main>
+        </section>
       </div>
     </div>
   );
 };
 
-export default Page;
+export default page;
