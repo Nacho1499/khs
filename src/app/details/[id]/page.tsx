@@ -4,13 +4,17 @@ import Image from "next/image";
 import notFound from "@/app/not-found";
 import Link from "next/link";
 
-interface  PageProps {
-  params: { id: string };
+interface PageProps {
+  params: Promise<{ id: string }>;
 }
 
-const page = ({ params }: PageProps) => {
-  const hospital = hospitals.find((h) => h.id === params.id);
+const page = async ({ params }: PageProps) => {
+  // Await the params since it's now a Promise in Next.js 15
+  const { id } = await params;
+  
+  const hospital = hospitals.find((h) => h.id === id);
   if (!hospital) return notFound();
+  
   return(
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-4xl mx-auto bg-white shadow rounded-lg overflow-hidden">
