@@ -240,7 +240,7 @@ const Page = () => {
                     <h3 className="text-xl font-semibold text-gray-800 mb-4">
                       {page.name}
                     </h3>
-                    <Link href="/details" className="text-blue-700">
+                    <Link href="" className="text-blue-700">
                       Details page →
                     </Link>
                   </div>
