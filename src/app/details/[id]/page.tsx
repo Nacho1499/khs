@@ -4,11 +4,11 @@ import Image from "next/image";
 import notFound from "@/app/not-found";
 import Link from "next/link";
 
-interface Props {
+interface  PageProps {
   params: { id: string };
 }
 
-const page = ({ params }: Props) => {
+const page = ({ params }: PageProps) => {
   const hospital = hospitals.find((h) => h.id === params.id);
   if (!hospital) return notFound();
   return(
