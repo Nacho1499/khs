@@ -47,16 +47,16 @@ const Hero = () => {
         {/* Action Buttons */}
         <div className="flex justify-center gap-6">
           <Link
-            href="/login"
+            href="/signup"
             className="inline-block  text-white text-white py-3 bg-white/10 backdrop-blur-md px-6 rounded-lg hover:shadow-lg transition-all"
           >
             Get Started
           </Link>
           <Link
-            href="/"
+            href="/login"
             className="inline-block border-2 border-blue-500 text-white py-3 px-6 bg-white/10 backdrop-blur-md rounded-lg hover:shadow-lg  transition-all"
           >
-            Meet a Doctor
+            Login Here
           </Link>
         </div>
       </div>

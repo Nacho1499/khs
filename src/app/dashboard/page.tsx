@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { auth } from "../../../lib/firebase";
 import Link from "next/link";
 import Image from "next/image";
+import { toast } from "sonner";
 
 interface top {
   id: number;
@@ -58,7 +59,10 @@ const Page = () => {
   const handleLogout = async () => {
     try {
       await signOut(auth);
-      router.push("/login");
+      toast.success(`Logout successful: (${user?.displayName || "Profile"})`);
+      setTimeout(() => {
+        router.push("/dashboard");
+      }, 2000);
     } catch (error) {
       console.error("Logout failed:", error);
       alert("Failed to logout. Please try again.");
@@ -202,7 +206,7 @@ const Page = () => {
                     </div>
                   )}
                   <button
-                    className="flex items-center w-full px-4 py-2 text-gray-700 hover:bg-gray-100"
+                    className="flex items-center w-full px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer"
                     onClick={handleLogout}
                   >
                     <LogOut className="w-5 h-5 mr-2" />
