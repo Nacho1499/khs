@@ -2,7 +2,11 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, User, LogOut, X } from "lucide-react";
-import { signOut, onAuthStateChanged, User as FirebaseUser } from "firebase/auth";
+import {
+  signOut,
+  onAuthStateChanged,
+  User as FirebaseUser,
+} from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { auth } from "../../../lib/firebase";
 import Link from "next/link";
@@ -36,13 +40,12 @@ const sidebarLinks: SidebarLink[] = [
 
 const Page = () => {
   useEffect(() => {
-  document.documentElement.classList.remove("dark");
-}, []);
+    document.documentElement.classList.remove("dark");
+  }, []);
   const router = useRouter();
 
   // Auth state and loading state
   const [user, setUser] = useState<FirebaseUser | null>(null);
-  
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
@@ -51,7 +54,6 @@ const Page = () => {
       } else {
         setUser(firebaseUser);
       }
-    
     });
     return () => unsubscribe();
   }, [router]);
@@ -61,7 +63,7 @@ const Page = () => {
       await signOut(auth);
       toast.success(`Logout successful: (${user?.displayName || "Profile"})`);
       setTimeout(() => {
-        router.push("/dashboard");
+        router.push("/");
       }, 2000);
     } catch (error) {
       console.error("Logout failed:", error);
@@ -70,7 +72,7 @@ const Page = () => {
   };
 
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
-  const [dropdownOpen, setDropdownOpen] = useState <boolean>(false);
+  const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
   const [activeLink, setActiveLink] = useState<string>("Home");
   const [isDesktop, setIsDesktop] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -92,7 +94,10 @@ const Page = () => {
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setDropdownOpen(false);
       }
     }
@@ -120,7 +125,6 @@ const Page = () => {
   const sidebarVisible = isDesktop || sidebarOpen;
 
   // While checking auth, show loading UI
- 
 
   // If no user (should redirect already), render nothing to avoid flicker
   if (!user) {
@@ -168,7 +172,9 @@ const Page = () => {
             </a>
           ))}
         </nav>
-        <div className="text-xs text-gray-400 mt-auto">© 2025. All Rights Reserved</div>
+        <div className="text-xs text-gray-400 mt-auto">
+          © 2025. All Rights Reserved
+        </div>
       </motion.aside>
 
       <div className="flex-1 flex flex-col ml-0 md:ml-20 overflow-y-auto">
@@ -237,8 +243,13 @@ const Page = () => {
                     alt={page.name}
                   />
                   <div className="p-5">
-                    <h3 className="text-xl font-semibold text-gray-800 mb-4">{page.name}</h3>
-                    <Link href={`/details/${page.id}`} className="text-blue-700">
+                    <h3 className="text-xl font-semibold text-gray-800 mb-4">
+                      {page.name}
+                    </h3>
+                    <Link
+                      href={`/details/${page.id}`}
+                      className="text-blue-700"
+                    >
                       Details page →
                     </Link>
                   </div>
