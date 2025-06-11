@@ -15,7 +15,7 @@ const Loading = () => {
   }
   return (
     <div className="w-full h-[100vh] fixed top-0 z-50 bg-white">
-      <div className="flex justify-center items-center h-screen bg-white dark:bg-gray-900">
+      <div className="flex justify-center items-center h-screen bg-white ">
       <div className="flex space-x-3">
         {letters.map((letter, i) => (
           <span
