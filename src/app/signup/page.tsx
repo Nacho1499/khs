@@ -12,6 +12,7 @@ const Page = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [username, setUsername] = useState<string>("");
+    const [loading, setLoading] = useState<boolean>(false);
 
   const handleSignup = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -30,6 +31,8 @@ const Page = () => {
       }, 1000);
     } catch {
       toast.error("Signup failed ");
+    }finally{
+      setLoading(false);
     }
   };
   return (
@@ -66,7 +69,12 @@ const Page = () => {
           />
           <button
             type="submit"
-            className="w-full bg-gradient-to-r from-blue-800 to-indigo-900 text-white py-2 rounded hover:bg-blue-700 transition"
+            disabled={loading}
+            className={`w-full py-2 rounded  transition  ${
+              loading
+                ? "bg-blue-400 cursor-not-allowed "
+                : "bg-gradient-to-r from-blue-800 to-indigo-900 hover:bg-blue-700 text-white "
+            }`}
           >
             Signup
           </button>
