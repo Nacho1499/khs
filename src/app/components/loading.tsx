@@ -20,7 +20,7 @@ const Loading = () => {
         {letters.map((letter, i) => (
           <span
             key={i}
-            className="flex items-center justify-center w-8 h-8 bg-blue-500 rounded-full text-white font-bold shadow-lg animate-bounce"
+            className="flex items-center justify-center w-8 h-8 bg-gradient-to-r from-blue-800 to-indigo-900 rounded-full text-white font-bold shadow-lg animate-bounce"
             style={{ animationDelay: `${i * 0.2}s` }}
           >
             {letter}

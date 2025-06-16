@@ -77,11 +77,11 @@ const Testimonal = () => {
                 <Image
                   src={item.image}
                   alt={item.name}
-                  className="w-16 h-16 rounded-full mb-4 object-cover border-2 border-blue-500"
+                  className="w-16 h-16 rounded-full mb-4 object-cover border-2 border-blue-700"
                   height={100}
                   width={200}
                 />
-                <p className="text-gray-600 italic">&quot{item.text}</p>
+                <p className="text-gray-600 italic">{item.text}</p>
                 <h4 className="mt-4 font-semibold text-lg text-gray-800">
                   {item.name}
                 </h4>

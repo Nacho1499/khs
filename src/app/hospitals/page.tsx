@@ -162,7 +162,7 @@ const Page = () => {
               }}
               className={`block px-4 py-2 rounded-md font-medium transition-colors ${
                 activeLink === name
-                  ? "bg-blue-600 text-white"
+                  ? "bg-gradient-to-r from-blue-800 to-indigo-900 text-white"
                   : "text-gray-700 hover:bg-blue-100 hover:text-blue-700"
               }`}
             >

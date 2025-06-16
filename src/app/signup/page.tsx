@@ -66,7 +66,7 @@ const Page = () => {
           />
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
+            className="w-full bg-gradient-to-r from-blue-800 to-indigo-900 text-white py-2 rounded hover:bg-blue-700 transition"
           >
             Signup
           </button>
@@ -74,7 +74,7 @@ const Page = () => {
 
         <p className="mt-6 text-center text-sm text-gray-600">
           already have an account?{" "}
-          <Link href="/login" className="text-blue-600 hover:underline">
+          <Link href="/login" className="text-blue-700 hover:underline">
             Login
           </Link>
         </p>

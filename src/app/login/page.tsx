@@ -57,7 +57,7 @@ const Page = () => {
             className={`w-full py-2 rounded transition ${
               loading
                 ? "bg-blue-400 cursor-not-allowed"
-                : "bg-blue-600 hover:bg-blue-700 text-white"
+                : "bg-gradient-to-r from-blue-800 to-indigo-900 hover:bg-blue-700 text-white"
             }`}
           >
             Log In
@@ -66,7 +66,7 @@ const Page = () => {
 
         <p className="mt-6 text-center text-sm text-gray-600">
           Don’t have an account?{" "}
-          <Link href="/signup" className="text-blue-600 hover:underline">
+          <Link href="/signup" className="text-blue-700 hover:underline">
             Sign up
           </Link>
         </p>
