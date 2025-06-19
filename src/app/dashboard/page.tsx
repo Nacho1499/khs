@@ -132,7 +132,7 @@ const Page = () => {
   }
 
   return (
-    <div className="flex h-screen bg-gray-100 overflow-hidden">
+    <div className="flex h-screen bg-gray-100 overflow-hidden bg-white">
       <AnimatePresence>
         {sidebarOpen && !isDesktop && (
           <motion.div
@@ -193,7 +193,7 @@ const Page = () => {
               className="flex items-center space-x-2 p-2 rounded-md hover:bg-gray-200"
             >
               <User className="h-6 w-6 text-blue-700" />
-              <span className="font-medium text-gray-700 animate-bounce">
+              <span className="font-medium text-gray-700">
                 {user?.displayName || "Profile"}
               </span>
             </button>

@@ -191,7 +191,7 @@ const Page = () => {
               className="flex items-center space-x-2 p-2 rounded-md hover:bg-gray-200"
             >
               <User className="h-6 w-6 text-gray-700" />
-              <span className="font-medium text-gray-700 animate-bounce">
+              <span className="font-medium text-gray-700">
                 {user?.displayName || "Profile"}
               </span>
             </button>

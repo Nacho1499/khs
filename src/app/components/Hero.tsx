@@ -56,7 +56,7 @@ const Hero = () => {
             href="/login"
             className="inline-block border-2  text-white py-3 px-6 bg-white/10 backdrop-blur-md rounded-lg hover:shadow-lg  transition-all"
           >
-            Login Here
+            Meet a Doctor
           </Link>
         </div>
       </div>

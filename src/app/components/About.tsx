@@ -1,4 +1,5 @@
 "use client";
+import Animation from "./Animation";
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -16,12 +17,13 @@ const About = () => {
           className="w-full md:w-1/2"
         >
           <Image
-            src="/abt.jpg" // Replace with your image path
+            src="/abt.jpg" //
             alt="About KHS"
             width={600}
             height={400}
-            className="rounded-2xl shadow-md object-cover animate-bounce"
+            className="rounded-2xl shadow-md object-cover"
           />
+          <Animation/>
         </motion.div>
 
         {/* Right Side - Text */}
