@@ -2,7 +2,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-const images = ["/lab1.jpg", "/lab4.jpg", "/lab3.jpg"];
+const images = ["/new1.jpg", "/new2.jpg", "/lab1.jpg"];
 
 const Hero = () => {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
@@ -54,7 +54,7 @@ const Hero = () => {
           </Link>
           <Link
             href="/login"
-            className="inline-block border-2 border-blue-600 text-white py-3 px-6 bg-white/10 backdrop-blur-md rounded-lg hover:shadow-lg  transition-all"
+            className="inline-block border-2  text-white py-3 px-6 bg-white/10 backdrop-blur-md rounded-lg hover:shadow-lg  transition-all"
           >
             Login Here
           </Link>

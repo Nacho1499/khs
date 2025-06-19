@@ -20,7 +20,7 @@ const About = () => {
             alt="About KHS"
             width={600}
             height={400}
-            className="rounded-2xl shadow-md object-cover"
+            className="rounded-2xl shadow-md object-cover animate-bounce"
           />
         </motion.div>
 
